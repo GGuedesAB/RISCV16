@@ -1,0 +1,16 @@
+#!/bin/bash
+all_project_files="ALU/alu.v Control/control.v \
+                   DataMem/data_memory.v ForwardingUnit/fwdunit.v \
+                   HazardDetect/hazard_detect.v ImmGen/immediate_gen.v \
+                   InstrMem/instruction_memory.v RegisterBank/register_bank.v \
+                   rv16r.v sim.v"
+all_v_files=$(find ~/git/RISCV16 -name "*.v")
+for f in $all_project_files; do
+    if ! echo $all_v_files |  grep -q "$f";
+    then
+        echo "Missing $f from project."
+	exit 1
+    fi
+iverilog $all_v_files -s sim
+vvp a.out
+gtkwave my_dumpfile.vcd
