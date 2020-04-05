@@ -95,7 +95,7 @@ instruction_memory Instructions (PC, clk, instr_mem_data, we, rst, next_instruct
 
 immediate_gen Imm_Gen (IFID_instruction, immediate);
 
-data_memory Data_Mem (EXMEM_ALUResult, clk, EXMEM_contentOfRSTwo, we, EXMEM_memWrite, memoryData);
+data_memory Data_Mem (EXMEM_ALUResult, clk, EXMEM_contentOfRSTwo, EXMEM_memWrite, rst, memoryData);
 
 control Control_Unit (IFID_instruction, ALUSrc, ALUOp, branch, memWrite, memToReg, regWrite);
 
@@ -151,7 +151,7 @@ assign instruction =
 
 //Mux Write Back
 assign writeBackData =
-	(MEMWB_memToReg == 1'b1) ? memoryData :
+	(MEMWB_memToReg == 1'b1) ? MEMWB_memoryData :
 	MEMWB_ALUResult;
 	
 always @ (posedge clk)
