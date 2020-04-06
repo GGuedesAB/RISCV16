@@ -9,8 +9,9 @@ for f in $all_project_files; do
     if ! echo $all_v_files |  grep -q "$f";
     then
         echo "Missing $f from project."
-	exit 1
+	    exit 1
     fi
+done
 iverilog $all_v_files -s sim
 vvp a.out
 gtkwave my_dumpfile.vcd
