@@ -105,8 +105,6 @@ hazard_detect Hazard_Detection (IDEX_memToReg, IDEX_RDAddress, IFID_instruction[
 
 alu ALU (IDEX_ALUOp, aluFirstOperand, aluSecondOperand, ALUResult, zero);
 
-assign outputInstruction = IFID_instruction;
-
 //Forward to store
 assign RSTwoRealData =
 	//EX Hazard
@@ -146,7 +144,7 @@ assign aluSecondOperand =
 assign PCSrc = EXMEM_zero & EXMEM_branch;
 
 assign instruction =
-	(PCSrc == 1'b1 || MEMWB_PCSrc == 1'b1) ? 16'b0 :
+	(PCSrc == 1'b1) ? 16'b0 :
 	next_instruction;
 
 //Mux Write Back
@@ -322,7 +320,7 @@ begin
 			EXMEM_RDAddress <= 4'b0;
 			EXMEM_contentOfRSTwo <= 16'b0;
 			//Control registers
-			EXMEM_zero = 1'b0;
+			EXMEM_zero <= 1'b0;
 			EXMEM_branch <= 1'b0;
 			EXMEM_memWrite <= 1'b0;
 			EXMEM_memToReg <= 1'b0;
@@ -343,7 +341,7 @@ begin
 			EXMEM_RDAddress <= IDEX_RDAddress;
 			EXMEM_contentOfRSTwo <= RSTwoRealData;
 			//Control registers
-			EXMEM_zero = zero;
+			EXMEM_zero <= zero;
 			EXMEM_branch <= IDEX_branch;
 			EXMEM_memWrite <= IDEX_memWrite;
 			EXMEM_memToReg <= IDEX_memToReg;
