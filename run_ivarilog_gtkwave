@@ -12,6 +12,6 @@ for f in $all_project_files; do
 	    exit 1
     fi
 done
-iverilog $all_v_files -s sim
+iverilog $all_v_files -Wall -s sim
 vvp a.out
 gtkwave my_dumpfile.vcd
