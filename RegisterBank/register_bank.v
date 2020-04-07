@@ -1,6 +1,6 @@
-module register_bank //#(parameter reg_bank_size = 4, //Memory size is 2^mem_size
-							//	parameter word_size = 16) //Word size is actually word_size
+module register_bank #(parameter reg_bank_size = 16, parameter word_size = 16)
 (	input wire clk,
+	input wire rst,
 	input wire we,
 	//Print register
 	output wire [15:0] printRegOneData,
@@ -17,33 +17,41 @@ module register_bank //#(parameter reg_bank_size = 4, //Memory size is 2^mem_siz
 	input wire [15:0] regRD_data
 );
 
-reg [15:0] reg_bank [15:0];
+reg [word_size-1:0] reg_bank [reg_bank_size-1:0];
 
 //Forces 0 if reading R0
 assign regRSOneread_data = 
 	(regRSOneread_addr == 4'b0) ? 16'b0 :
 	//This deals with pre-written data forwarding
 	//when the instruction on ID is fetching data that is on WB
-	((regRSOneread_addr == regRD_addr) && (regRSOneread_addr != 4'b0)) ? regRD_data :
-	reg_bank[regRSOneread_addr];
+	(regRSOneread_addr == regRD_addr) ? regRD_data : reg_bank[regRSOneread_addr];
 
 //Forces 0 if reading R0	
 assign regRSTworead_data = 
 	(regRSTworead_addr == 4'b0) ? 16'b0 :
 	//This deals with pre-written data forwarding
 	//when the instruction on ID is fetching data that is on WB
-	((regRSTworead_addr == regRD_addr) && (regRSTworead_addr != 4'b0)) ? regRD_data :
-	reg_bank[regRSTworead_addr];
+	(regRSTworead_addr == regRD_addr) ? regRD_data : reg_bank[regRSTworead_addr];
 	
 assign printRegOneData = reg_bank[4'b1111];
 assign printRegTwoData = reg_bank[4'b1110];
 assign printRegThreeData = reg_bank[4'b1101];
+integer i;
 
 always @ (posedge clk)
 begin
-	if (we == 1'b1 && (regRD_addr != 4'b0))
+	if (rst)
 	begin
-		reg_bank [regRD_addr] = regRD_data;
+		for (i=0;i<reg_bank_size;i++) begin	
+			reg_bank[i] <= 0;
+		end
+	end
+	else
+	begin
+		if (we == 1'b1 && (regRD_addr != 4'b0))
+		begin
+			reg_bank [regRD_addr] <= regRD_data;
+		end
 	end
 end
 endmodule
