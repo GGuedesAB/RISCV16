@@ -69,7 +69,7 @@ def geraHEX(intrs):
 		arq.write("\n")
 
 
-	while pos <= 65535:
+	while pos <= 1023:
 		HEX = "0000"
 		pos += 1
 		#print(HEX)
