@@ -2,7 +2,7 @@
 // Single port RAM with single read/write address 
 
 module data_memory 
-#(parameter DATA_WIDTH=16, parameter ADDR_WIDTH=1024)
+#(parameter DATA_WIDTH=16, parameter ADDR_WIDTH=16, parameter MEM_SIZE=1024)
 (
 	input [(ADDR_WIDTH-1):0] addr,
 	input clk,
@@ -13,16 +13,17 @@ module data_memory
 );
 
 	// Declare the RAM variable
-	reg [DATA_WIDTH-1:0] ram[ADDR_WIDTH-1:0];
+	reg [DATA_WIDTH-1:0] ram[MEM_SIZE-1:0];
 	integer i;
-
+	wire internal_address;
+	assign internal_address = addr[9:0];
 	always @ (posedge clk)
 	begin
 		// Write
 		if (we)
-			ram[addr] <= data;
+			ram[internal_address] <= data;
 		if (rst)
-            for (i=0;i<ADDR_WIDTH; i=i+1)
+            for (i=0;i<MEM_SIZE; i=i+1)
                 ram[i] = 16'b0;
 	end
 
