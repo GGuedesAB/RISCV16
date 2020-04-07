@@ -17,7 +17,7 @@ always #1 clock = ~clock;
 initial begin
 	$dumpfile("my_dumpfile.vcd"); 
 	$dumpvars(0, sim);
-	$readmemh("program.hex", proc.Instructions.ram, 0, 65535);
+	$readmemh("program.hex", proc.Instructions.ram, 0, 1023);
 	#1 reset = 1;
     #1 clock = 0;
     #5 reset = 0;
