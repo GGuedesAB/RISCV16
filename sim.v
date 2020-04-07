@@ -3,14 +3,18 @@ module sim ();
 
 reg clock;
 reg reset;
-
+reg write_enable;
+wire clk;
+wire rst;
+wire we;
 assign clk = clock;
 assign rst = reset;
+assign we = write_enable;
 wire [15:0] printRegOneData;
 wire [15:0] printRegTwoData;
 wire [15:0] printRegThreeData;
 
-rv16r proc (clk, rst, printRegOneData, printRegTwoData, printRegThreeData);
+rv16r proc (clk, rst, we, printRegOneData, printRegTwoData, printRegThreeData);
 
 always #1 clock = ~clock;
 	
