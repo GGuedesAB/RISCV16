@@ -15,7 +15,7 @@ module data_memory
 	// Declare the RAM variable
 	reg [DATA_WIDTH-1:0] ram[MEM_SIZE-1:0];
 	integer i;
-	wire internal_address;
+	wire [9:0] internal_address;
 	assign internal_address = addr[9:0];
 	always @ (posedge clk)
 	begin

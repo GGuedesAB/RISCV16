@@ -15,7 +15,7 @@ module instruction_memory
 	// Declare the RAM variable
 	reg [DATA_WIDTH-1:0] ram [MEM_SIZE-1:0];
     integer i;
-	wire internal_addr;
+	wire [9:0] internal_addr;
 	assign internal_addr = addr[9:0];
 	always @ (posedge clk)
 	begin
