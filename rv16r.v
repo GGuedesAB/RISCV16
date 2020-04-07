@@ -2,6 +2,7 @@ module rv16r
 (
 	input wire clk,
 	input wire rst,
+	input wire we,
 	output wire [15:0] printRegOneData,
 	output wire [15:0] printRegTwoData,
 	output wire [15:0] printRegThreeData
