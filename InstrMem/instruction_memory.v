@@ -2,7 +2,7 @@
 // Single port RAM with single read/write address 
 
 module instruction_memory 
-#(parameter DATA_WIDTH=16, parameter ADDR_WIDTH=1024)
+#(parameter DATA_WIDTH=16, parameter ADDR_WIDTH=16, parameter MEM_SIZE=1024)
 (
 	input [(ADDR_WIDTH-1):0] addr,
 	input clk,
@@ -13,14 +13,15 @@ module instruction_memory
 );
 
 	// Declare the RAM variable
-	reg [DATA_WIDTH-1:0] ram[ADDR_WIDTH-1:0];
+	reg [DATA_WIDTH-1:0] ram [MEM_SIZE-1:0];
     integer i;
-
+	wire internal_addr;
+	assign internal_addr = addr[9:0];
 	always @ (posedge clk)
 	begin
 		// Write
 		if (we)
-			ram[addr] <= data;
+			ram[internal_addr] <= data;
 		//if (rst)
         //    for (i=0;i<(ADDR_WIDTH-1); i=i+1)
         //        ram[i] = 16'b0;
@@ -29,6 +30,6 @@ module instruction_memory
 	// Continuous assignment implies read returns NEW data.
 	// This is the natural behavior of the TriMatrix memory
 	// blocks in Single Port mode.  
-	assign q = ram[addr];
+	assign q = ram[internal_addr];
 
 endmodule
