@@ -87,9 +87,11 @@ wire [15:0] instr_mem_data;
 
 //Components instantiation
 
-register_bank Registers (clk, MEMWB_regWrite, printRegOneData, printRegTwoData, printRegThreeData,
-								IFID_instruction[11:8], RSOneData, IFID_instruction[15:12], 
-								RSTwoData, MEMWB_RDAddress, writeBackData);
+register_bank Registers (clk, rst, MEMWB_regWrite, 
+						 printRegOneData, printRegTwoData, printRegThreeData,
+						 IFID_instruction[11:8], RSOneData, 
+						 IFID_instruction[15:12], RSTwoData, 
+						 MEMWB_RDAddress, writeBackData);
 															 
 instruction_memory Instructions (PC, clk, instr_mem_data, we, rst, next_instruction);
 
