@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 module instruction_memory
 #(parameter DATA_WIDTH=16, parameter ADDR_WIDTH=16, parameter MEM_SIZE=1024)
 (

@@ -1,6 +1,4 @@
-// Quartus II Verilog Template
-// Single port RAM with single read/write address
-
+`timescale 1ns/1ns
 module data_memory
 #(parameter DATA_WIDTH=16, parameter ADDR_WIDTH=16, parameter MEM_SIZE=1024)
 (
@@ -22,10 +20,11 @@ module data_memory
         // Write
         if (we)
             ram[internal_address] <= data;
-        if (rst){
+        if (rst)
+        begin
             for (i=0;i<MEM_SIZE; i=i+1)
                 ram[i] = 16'b0;
-        }
+        end
     end
 
     // Continuous assignment implies read returns NEW data.

@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 module fwdunit
 (
     input wire [3:0]  IDEX_RS1,

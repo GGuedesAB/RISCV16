@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 module hazard_detect
 (
     input wire IDEX_memToReg,

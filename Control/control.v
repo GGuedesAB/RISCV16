@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 module control #(parameter instruction_size = 16)
 (
     input wire [instruction_size-1:0] instruction,

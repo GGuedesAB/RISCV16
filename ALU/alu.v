@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 module alu #(parameter word_size = 16) //Word size is actually word_size
 (
     input wire  [1:0]           operation,

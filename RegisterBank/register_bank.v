@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 module register_bank #(parameter reg_bank_size = 16, parameter word_size = 16)
 (    input wire clk,
     input wire rst,
