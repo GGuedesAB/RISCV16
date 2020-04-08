@@ -28,7 +28,7 @@ def getImmediate(string):
 
 #Retorna o binario do numero
 def getBin(num):
-    strBin = bin(num) 
+    strBin = bin(num)
     strBin = strBin.lstrip('0b')
     strBin = completBin(strBin)
     return strBin
@@ -49,7 +49,7 @@ def formatInt(num, tam):
     while len(h)<tam:
         a = "0" + h
         h = a
-    return h    
+    return h
 
 #Cria arquivo HEX
 def geraHEX(intrs):
@@ -75,7 +75,7 @@ def geraHEX(intrs):
         #print(HEX)
         arq.write(HEX)
         arq.write("\n")
-    
+
     arq.close()
 
 ''' main '''
@@ -106,7 +106,7 @@ for instruction in sys.stdin:
         rd = getBin(Rd)
         rs1 = getBin(Rs1)
         rs2 = getBin(Rs2)
-        
+
         binInstr = rs2 + rs1 + Func + rd + Op
 
 
@@ -132,7 +132,7 @@ for instruction in sys.stdin:
         rs1 = getBin(Rs1)
         rs2 = getBin(Rs2)
         immed = getBin(immed)
-        
+
         binInstr = rs2 + rs1 + Func + immed + Op
 
     intrs.append(binInstr)
