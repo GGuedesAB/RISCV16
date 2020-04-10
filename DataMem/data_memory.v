@@ -19,11 +19,22 @@ module data_memory
     begin
         // Write
         if (we)
+        begin
             ram[internal_address] <= data;
-        if (rst)
+        end
+        else
         begin
             for (i=0;i<MEM_SIZE; i=i+1)
-                ram[i] = 16'b0;
+            begin
+                if (rst)
+                begin
+                    ram[i] <= 16'b0;
+                end
+                else
+                begin
+                    ram[i] <= ram[i];
+                end
+            end
         end
     end
 
