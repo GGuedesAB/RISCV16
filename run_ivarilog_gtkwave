@@ -5,13 +5,54 @@ all_project_files="ALU/alu.v Control/control.v \
                    InstrMem/instruction_memory.v RegisterBank/register_bank.v \
                    rv16r.v sim.v"
 all_v_files=$(find ~/git/RISCV16 -name "*.v")
-for f in $all_project_files; do
+for f in $all_project_files; 
+do
     if ! echo $all_v_files |  grep -q "$f";
     then
         echo "Missing $f from project."
         exit 1
     fi
 done
+
+PROGRAM_ARG_INTERFACE="-GUI -h"
+
+print_usage () {
+    echo "RISCV16 simulation scrtip."
+    echo "  Usage:"
+    for arg in $PROGRAM_ARG_INTERFACE;
+    do
+        case $arg in
+            "-GUI") echo "    -GUI: Execute with graphic interface.";;
+            "-h") echo   "    -h:   Show this usage.";;
+        esac
+    done
+}
+
+for arg in $@;
+do
+    # Checking if switch is implemented
+    HAS_SWITCH=0
+    for implemented_arg in $PROGRAM_ARG_INTERFACE;
+    do
+        if [ "$arg" == "$implemented_arg" ];
+        then
+            HAS_SWITCH=1
+        fi
+    done
+    if [ $HAS_SWITCH -eq 0 ];
+    then
+        echo "Unknown switch $arg"
+        print_usage
+        exit 1
+    fi
+
+    # Processing switches
+    case $arg in
+        "-GUI") echo "Executing GUI mode."; GUI=1;;
+        "-h") print_usage; exit 0;;
+    esac
+done
+
 IVLOG_VER=$(iverilog -V | sed -n '1p' | sed -r 's@^.*version ([0-9\.\-]+) .*$@\1@')
 if ! [ -z $(echo "$IVLOG_VER <= 10.1" | bc -l) ];
 then
@@ -19,5 +60,9 @@ then
 else
     iverilog $all_v_files -Wall -s sim
 fi
+
 vvp a.out
-gtkwave my_dumpfile.vcd
+if ! [ -z $GUI ];
+then
+    gtkwave my_dumpfile.vcd
+fi
