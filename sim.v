@@ -4,6 +4,7 @@ module sim ();
 reg clock;
 reg reset;
 reg write_enable;
+reg finish;
 wire clk;
 wire rst;
 wire we;
@@ -16,15 +17,21 @@ wire [15:0] printRegThreeData;
 
 rv16r proc (clk, rst, we, printRegOneData, printRegTwoData, printRegThreeData);
 
+always @ (posedge finish)
+begin
+    $display("Output terminal: \n  R13 = %5d\n  R14 = %5d\n  R15 = %5d", printRegThreeData, printRegTwoData, printRegOneData);
+end
+
 always #1 clock = ~clock;
 
 initial begin
     $dumpfile("my_dumpfile.vcd");
     $dumpvars(0, sim);
     $readmemh("program.hex", proc.Instructions.ram, 0, 1023);
-    #1 reset = 1;
-    #1 clock = 0;
-    #5 reset = 0;
-    #500 $finish;
+    #0 reset = 1;
+    #0 clock = 0;
+    #2 reset = 0;
+    #500 finish = 1;
+    #0 $finish;
 end
 endmodule
