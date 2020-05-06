@@ -4,7 +4,9 @@ all_project_files="ALU/alu.v Control/control.v \
                    HazardDetect/hazard_detect.v ImmGen/immediate_gen.v \
                    InstrMem/instruction_memory.v RegisterBank/register_bank.v \
                    rv16r.v sim.v"
+
 all_v_files=$(find ~/git/RISCV16 -name "*.v")
+
 for f in $all_project_files;
 do
     if ! echo $all_v_files |  grep -q "$f";
@@ -14,7 +16,7 @@ do
     fi
 done
 
-PROGRAM_ARG_INTERFACE="-GUI -h -top"
+PROGRAM_ARG_INTERFACE="-GUI -h -top -I"
 
 print_usage () {
     echo "RISCV16 simulation scrtip."
@@ -22,39 +24,75 @@ print_usage () {
     for arg in $PROGRAM_ARG_INTERFACE;
     do
         case $arg in
-            "-GUI") echo "    -GUI: Execute with graphic interface.";;
-            "-h"  ) echo "    -h:   Show this usage.";;
-            "-top") echo "    -top <top-module>: Simulation's top module";;
+            -GUI )
+                echo "    -GUI: Execute with graphic interface.";;
+            -h )
+                echo "    -h:   Show this usage.";;
+            -top )
+                echo "    -top <top-module>: Simulation's top module";;
+            -I )
+                echo "    -I \"<files>\" : Include files to simulation";;
         esac
     done
 }
 
-SKIP=0
-
-for arg in $@;
-do
-    if [ $SKIP -ne 1 ];
+search_module_name_in_verilog_file () {
+    if ! grep -q -r -P "module\s+$@" $all_v_files;
     then
-        # Processing switches
-        case $arg in
-            "-GUI") echo "Executing GUI mode."; GUI=1;;
-            "-top") TOP_MODULE=$(echo "$@" | grep -o -P "\-top\s+[^\s]+" | sed "s@\-top *@@"); SKIP=1;;
-            "-h"  ) print_usage; exit 0;;
-            *     ) echo "Unkown switch $arg"; print_usage; exit 1;;
-        esac
-    else
-        SKIP=0
+        echo "ERROR: Could not find top module \"$@\" in files included"
+        exit 1
     fi
+}
+
+append_to_verilog_files () {
+    for f in $@;
+    do
+        if ! [ -f $f ];
+        then
+            echo "ERROR: Could not find $f"
+            exit 1
+        else
+            all_v_files+=" $f"
+        fi
+    done
+}
+
+while [ "$#" -gt "0" ];
+do
+    # Processing switches
+    case $1 in
+        -GUI )
+            echo "Executing GUI mode.";
+            GUI=1;;
+        -top )
+            shift;
+            TOP_MODULE=$1;
+            SKIP=1;;
+        -I )
+            shift;
+            if [[ "$1" != *"-"* ]];
+            then
+                INCLUDED_MODULES="$1";
+            fi;;
+        -h )
+            print_usage;
+            exit 0;;
+        * )
+            echo "Unkown switch $1";
+            print_usage;
+            exit 1;;
+    esac
+    shift
 done
+
 if [ -z $TOP_MODULE ];
 then
     TOP_MODULE="sim"
 fi
-if ! grep -q -r -P "module\s+$TOP_MODULE" $all_v_files;
-then
-    echo "ERROR: Could not find top module \"$TOP_MODULE\""
-    exit 1
-fi
+
+search_module_name_in_verilog_file $TOP_MODULE
+
+append_to_verilog_files $INCLUDED_MODULES
 
 IVLOG_VER=$(iverilog -V | sed -n '1p' | sed -r 's@^.*version ([0-9\.\-]+) .*$@\1@')
 if ! [ -z $(echo "$IVLOG_VER <= 10.1" | bc -l) ];
