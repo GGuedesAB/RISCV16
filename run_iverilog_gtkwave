@@ -90,9 +90,9 @@ then
     TOP_MODULE="sim"
 fi
 
-search_module_name_in_verilog_file $TOP_MODULE
-
 append_to_verilog_files $INCLUDED_MODULES
+
+search_module_name_in_verilog_file $TOP_MODULE
 
 IVLOG_VER=$(iverilog -V | sed -n '1p' | sed -r 's@^.*version ([0-9\.\-]+) .*$@\1@')
 if ! [ -z $(echo "$IVLOG_VER <= 10.1" | bc -l) ];
