@@ -5,11 +5,13 @@ all_project_files="ALU/alu.v Control/control.v \
                    InstrMem/instruction_memory.v RegisterBank/register_bank.v \
                    rv16r.v sim.v"
 
-all_v_files=$(find ~/git/RISCV16 -name "*.v")
+scripts_location="$(dirname ${BASH_SOURCE[0]})"
+
+all_v_files=$(timeout 10 find "$scripts_location" -maxdepth 3 -type f -name "*.v")
 
 for f in $all_project_files;
 do
-    if ! echo $all_v_files |  grep -q "$f";
+    if [[ "$all_v_files" != *"$f"* ]];
     then
         echo "Missing $f from project."
         exit 1
