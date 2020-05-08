@@ -1,5 +1,7 @@
 #!/bin/bash
 
+assembler="Assembler/assembler.py"
+
 if [ -z $1 ];
 then
     echo "Missing prog file."
@@ -7,9 +9,15 @@ then
 else
     if ! [ -f $1 ];
     then
-        echo "Could not find $1"
+        echo "Could not find $1 at $PWD"
         exit 1
     fi
+fi
+
+if ! [ -f $assembler ];
+then
+    echo "Could not find assembler installation."
+    exit 1
 fi
 
 if ! command -v python3 > /dev/null;
@@ -18,11 +26,11 @@ then
     exit 1
 fi
 
-if find . -name "program.hex" > /dev/null;
+if find . -maxdepth 1 -name "program.hex" > /dev/null;
 then
     echo "Overwriting program.hex"
 else
     echo "Creating program.hex"
 fi
 
-python3 Assembler/assembler.py < $1
+python3 "$assembler" < $1
